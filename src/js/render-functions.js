@@ -39,7 +39,7 @@ export function renderImages(images) {
       </li>`
     )
     .join('');
-  gallery.innerHTML = markupGallery;
+  gallery.insertAdjacentHTML("beforeend", markupGallery);
 
   lightbox.refresh();
 }
