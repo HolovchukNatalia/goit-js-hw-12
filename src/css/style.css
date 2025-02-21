@@ -179,14 +179,14 @@ body {
 
 
 
-.loader-btn {
+.loader-more {
   width: 48px;
   height: 48px;
   border-radius: 50%;
   position: relative;
   animation: rotate 1s linear infinite
 }
-.loader-btn::before {
+.loader-more::before {
   content: "";
   box-sizing: border-box;
   position: absolute;

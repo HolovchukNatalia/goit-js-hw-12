@@ -3,9 +3,10 @@ import 'izitoast/dist/css/iziToast.min.css';
 import axios from 'axios';
 import { renderImages } from './render-functions';
 
+const loaderMore = document.querySelector('.loader-more');
 const loadMoreBtn = document.querySelector('.load-more-btn');
 loadMoreBtn.style.display ='none';
-
+loaderMore.style.display = 'none';
 let page = 1;
 let perPage = 40;
 let totalPages;
@@ -47,7 +48,6 @@ export async function fetchImages(query, page) {
 
 loadMoreBtn.addEventListener('click', async (e)=>{
   e.preventDefault();
-  console.log(`Clicked! Current page: ${page}, Total pages: ${totalPages}`);
   if(page >= totalPages) {
     iziToast.show({
       position: 'topRight',
@@ -58,22 +58,30 @@ loadMoreBtn.addEventListener('click', async (e)=>{
     loadMoreBtn.style.display = 'none';
     return;
   }
-  try {
-    const postsImg = await fetchImages(currentQuery, page);
-    renderImages(postsImg);
-    page += 1;
+  loadMoreBtn.style.display = 'none';
+  loaderMore.style.display = 'block';
 
-    const galleryItemHeight = document.querySelector('.gallery-item')?.getBoundingClientRect().height;
-
-    if (galleryItemHeight) {
-      window.scrollBy({
-        top: 2 * galleryItemHeight,
-        behavior: 'smooth',
-      });
+  setTimeout(async () => {
+    try {
+      const postsImg = await fetchImages(currentQuery, page);
+      renderImages(postsImg);
+      page += 1;
+  
+      const galleryItemHeight = document.querySelector('.gallery-item')?.getBoundingClientRect().height;
+  
+      if (galleryItemHeight) {
+        window.scrollBy({
+          top: 2 * galleryItemHeight,
+          behavior: 'smooth',
+        });
+      }
+      loaderMore.style.display = 'none';
+      if (page < totalPages) {
+        loadMoreBtn.style.display = 'block';
+      }
+    } catch (error) {
+      console.log(error);
+      loader.style.display = 'none'; 
     }
-  } catch (error) {
-    console.log(error);
-  }finally {
-    loader.style.display = 'none';  
-  }
+  }, 2000);
 });
