@@ -5,6 +5,8 @@ import {
   fetchImages,
   resetPagination,
   setCurrentQuery,
+  currentQuery,
+  nextPage,
   page,
   totalPages,
 } from './js/pixabay-api';
@@ -15,7 +17,8 @@ const input = document.querySelector('.input');
 const loader = document.querySelector('.loader');
 const gallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more-btn'); 
-
+const loaderMore = document.querySelector('.loader-more');
+loaderMore.style.display = 'none';
 function clearGallery() {
   gallery.innerHTML = '';
 }
@@ -43,15 +46,55 @@ form.addEventListener('submit', async (e) => {
   try {
     const images = await fetchImages(query);
 
-    setTimeout(() => {
+    
       renderImages(images);
       loader.style.display = 'none';
 
       if (page < totalPages) {
         loadMoreBtn.style.display = 'block';
       }
-    }, 1000);
+    
   } catch (error) {
     console.log(error);
+  }
+});
+
+
+loadMoreBtn.addEventListener('click', async (e)=>{
+  e.preventDefault();
+  
+  loadMoreBtn.style.display = 'none';
+  loaderMore.style.display = 'block';
+
+
+  try {
+    nextPage();
+    const postsImg = await fetchImages(currentQuery, page);
+    renderImages(postsImg);
+
+    const galleryItemHeight = document.querySelector('.gallery-item')?.getBoundingClientRect().height;
+
+    if (galleryItemHeight) {
+      window.scrollBy({
+        top: 2 * galleryItemHeight,
+        behavior: 'smooth',
+      });
+    }
+    loaderMore.style.display = 'none';
+    if(page >= totalPages) {
+      iziToast.show({
+        position: 'topRight',
+        backgroundColor: 'red',
+        message:
+          "We're sorry, but you've reached the end of search results.",
+      });
+      loadMoreBtn.style.display = 'none';
+      return;
+    } else if (page < totalPages) {
+      loadMoreBtn.style.display = 'block';
+    }
+  } catch (error) {
+    console.log(error);
+    loader.style.display = 'none'; 
   }
 });
