@@ -16,9 +16,11 @@ const form = document.querySelector('.form');
 const input = document.querySelector('.input');
 const loader = document.querySelector('.loader');
 const gallery = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more-btn'); 
+const loadMoreBtn = document.querySelector('.load-more-btn');
+loadMoreBtn.style.display ='none';
 const loaderMore = document.querySelector('.loader-more');
 loaderMore.style.display = 'none';
+
 function clearGallery() {
   gallery.innerHTML = '';
 }
@@ -89,7 +91,6 @@ loadMoreBtn.addEventListener('click', async (e)=>{
           "We're sorry, but you've reached the end of search results.",
       });
       loadMoreBtn.style.display = 'none';
-      return;
     } else if (page < totalPages) {
       loadMoreBtn.style.display = 'block';
     }

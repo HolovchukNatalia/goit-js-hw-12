@@ -1,11 +1,4 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 import axios from 'axios';
-import { renderImages } from './render-functions';
-
-
-const loadMoreBtn = document.querySelector('.load-more-btn');
-loadMoreBtn.style.display ='none';
 
 let page = 1;
 let perPage = 40;
